@@ -8,10 +8,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.3.0",
     "@liveblocks/client": "^0.17.4",
     "@liveblocks/zustand": "^0.17.4",
+    "clsx": "^1.2.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-icons": "^4.4.0",
     "sass": "^1.53.0",
     "zustand": "^4.0.0-rc.1"
   },

@@ -1,0 +1,10 @@
+@layer components {
+  .form {
+    &-input {
+      @apply border-2 font-medium rounded-xl outline-none bg-gray-50;
+      @apply p-xs;
+      @apply text-gray placeholder:text-gray-lighter;
+      @apply focus:border-gray-light;
+    }
+  }
+}
