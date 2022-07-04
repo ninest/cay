@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
-import { Button } from "../components/Button";
-import { FormLabel } from "../components/form/FormLabel";
-import { Icon } from "../components/Icon";
-import { PageLayout } from "../components/layouts/PageLayout";
-import { Spacer } from "../components/Spacer";
-import { client } from "../liveblocks";
-import { useStore } from "../state/game";
+import { Button } from "@/components/Button";
+import { FormLabel } from "@/components/form/FormLabel";
+import { Icon } from "@/components/Icon";
+import { PageLayout } from "@/components/layouts/PageLayout";
+import { Spacer } from "@/components/Spacer";
+import { client } from "@/liveblocks";
+import { useStore } from "@/state/game";
 
 export const IndexPage = () => {
   const {

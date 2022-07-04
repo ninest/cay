@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Size } from "../types";
+import { Size } from "@/types";
 
 interface SpacerProps {
   size?: Size;

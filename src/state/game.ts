@@ -1,7 +1,7 @@
 import { middleware } from "@liveblocks/zustand";
 import create, { StateCreator } from "zustand";
-import { client } from "../liveblocks";
-import { LiveblocksStore } from "../types/zustand";
+import { client } from "@/liveblocks";
+import { LiveblocksStore } from "@/types/zustand";
 
 interface State {
   name: null | string;
