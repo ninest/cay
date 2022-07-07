@@ -1,14 +1,52 @@
-import { StartPage } from "@/routes/start";
+import {
+  RoomProvider
+} from "@/liveblocks";
 import { GamePage } from "@/routes/game";
-import { Route, Routes, useParams } from "react-router-dom";
+import { StartPage } from "@/routes/start";
+import { LiveList, LiveObject } from "@liveblocks/client";
+import {
+  Outlet,
+  Route,
+  Routes,
+  useNavigate,
+  useParams
+} from "react-router-dom";
 import { IndexPage } from "./routes";
 
 export const App = () => {
   return (
     <Routes>
       <Route path="/" element={<IndexPage />} />
-      <Route path="/start/:roomId" element={<StartPage />} />
-      <Route path="/game/:roomId" element={<GamePage />} />
+      {/*  */}
+      <Route path="/:roomId" element={<Game />}>
+        <Route path="/:roomId/start" element={<StartPage />} />
+        <Route path="/:roomId/game" element={<GamePage />} />
+      </Route>
     </Routes>
+  );
+};
+
+const Game = () => {
+  const navigate = useNavigate();
+  let { roomId } = useParams();
+
+  if (!roomId) {
+    navigate("/");
+  }
+  return (
+    <RoomProvider
+      id={roomId!}
+      initialStorage={{
+        config: new LiveObject({
+          started: false,
+          leader: 0,
+          reader: 0,
+        }),
+        whiteCards: new LiveList([]),
+        blackCards: new LiveList([]),
+      }}
+    >
+      <Outlet />
+    </RoomProvider>
   );
 };

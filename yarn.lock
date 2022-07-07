@@ -286,10 +286,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@liveblocks/client@^0.17.1":
-  version "0.17.4"
-  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.17.4.tgz#a68c1567a353e6e0d339e121b05caa488f426f6e"
-  integrity sha512-9oWh0Bnbb3D+Z59V52PAUXB939FeezQSGuaXAddlYrGF2kXohOykZQKHKOOFm2gLkKtBp8r1pMqWdRzFEhHGHg==
+"@liveblocks/client@^0.17.5":
+  version "0.17.5"
+  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.17.5.tgz#00513c9b99b3987e3e4861613e88f9ca5a766c3e"
+  integrity sha512-a3zyT2x8oW/i+OC3U38rMzQRbiO0p80qmWjXdW6F5OkAV7MAyhZyhwG52oO5sHV3QPjrczjXPXdnTzoxZ5sx3Q==
 
 "@liveblocks/react@^0.17.5":
   version "0.17.5"
