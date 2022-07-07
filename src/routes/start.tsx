@@ -1,39 +1,39 @@
 import { Button } from "@/components/Button";
 import { FormLabel } from "@/components/form/FormLabel";
-import { Icon } from "@/components/Icon";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { Spacer } from "@/components/Spacer";
-import { client } from "@/liveblocks";
-import { dedup } from "@/utils/dedup";
-import { fakePlayerName } from "@/utils/names";
+import { RoomProvider, useRoom, useStorage } from "@/liveblocks";
 import { shareLink } from "@/utils/share";
-import { useEffect, useState } from "react";
-import { FaChevronRight, FaShareAlt } from "react-icons/fa";
+import { FaShareAlt } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const StartPage = () => {
   const navigate = useNavigate();
-
   let { roomId } = useParams();
-  if (!roomId) roomId = "cool-room";
 
-  const [connectionId, setConnectionId] = useState<null | number>();
+  if (!roomId) {
+    navigate("/");
+  }
+
+  return (
+    <RoomProvider id={roomId!}>
+      <Page />
+    </RoomProvider>
+  );
+};
+
+const Page = () => {
+  const navigate = useNavigate();
+  const room = useRoom();
+  const {} = useStorage();
 
   return (
     <PageLayout className="flex">
       <div className="h-full md:w-2/3 lg:w-1/4 flex flex-col">
-        <pre>
-          {JSON.stringify(
-            {
-              roomId,
-            },
-            null,
-            2
-          )}
-        </pre>
+        <pre>{JSON.stringify({ room }, null, 2)}</pre>
         <div>
           <span className="bg-gray-100 border rounded p-0.5 text-xs font-mono">
-            {roomId}
+            {room.id}
           </span>
         </div>
         <Spacer size="xs" />

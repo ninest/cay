@@ -1,6 +1,6 @@
 import { StartPage } from "@/routes/start";
 import { GamePage } from "@/routes/game";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import { IndexPage } from "./routes";
 
 export const App = () => {
