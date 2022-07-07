@@ -21,6 +21,7 @@ type Config = {
   currentBlackCard: number | null;
 };
 export type WhiteCard = { text: string; pack: number };
+type SubmittedWhiteCards = { playerId: number; whiteCards: WhiteCard[] };
 export type BlackCard = WhiteCard & { pick: number };
 
 type Storage = {
@@ -28,6 +29,7 @@ type Storage = {
   hands: LiveMap<string, WhiteCard[]>;
   whiteCards: LiveList<WhiteCard>;
   blackCards: LiveList<BlackCard>;
+  submittedWhiteCards: LiveList<SubmittedWhiteCards>;
 };
 
 export const {

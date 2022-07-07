@@ -49,6 +49,7 @@ const Game = () => {
         whiteCards: new LiveList(whiteCardsCAH),
         blackCards: new LiveList(blackCardsCAH),
         hands: new LiveMap([]),
+        submittedWhiteCards: new LiveList([]),
       }}
     >
       <Outlet />
