@@ -286,15 +286,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@liveblocks/client@^0.17.4":
+"@liveblocks/client@^0.17.1":
   version "0.17.4"
   resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.17.4.tgz#a68c1567a353e6e0d339e121b05caa488f426f6e"
   integrity sha512-9oWh0Bnbb3D+Z59V52PAUXB939FeezQSGuaXAddlYrGF2kXohOykZQKHKOOFm2gLkKtBp8r1pMqWdRzFEhHGHg==
-
-"@liveblocks/zustand@^0.17.4":
-  version "0.17.4"
-  resolved "https://registry.yarnpkg.com/@liveblocks/zustand/-/zustand-0.17.4.tgz#b7ddf96f7ae47fc7158bb6073b2540810ab5dbcd"
-  integrity sha512-dQ0tAeezSPfGKiNjRubpctkB7bDtjEJqzVzXS2v8IId4sz2iSXi7VQOSoHnvBDpTS3311II9irQC4JlLHkXMvg==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -1153,11 +1148,6 @@ update-browserslist-db@^1.0.4:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
-use-sync-external-store@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.1.0.tgz#3343c3fe7f7e404db70f8c687adf5c1652d34e82"
-  integrity sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==
-
 util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
@@ -1184,10 +1174,3 @@ yaml@^1.10.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
-
-zustand@^4.0.0-rc.1:
-  version "4.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.0.0-rc.1.tgz#ec30a3afc03728adec7e1bd7bcc3592176372201"
-  integrity sha512-qgcs7zLqBdHu0PuT3GW4WCIY5SgXdsv30GQMu9Qpp1BA2aS+sNS8l4x0hWuyEhjXkN+701aGWawhKDv6oWJAcw==
-  dependencies:
-    use-sync-external-store "1.1.0"
