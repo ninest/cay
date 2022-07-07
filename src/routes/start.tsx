@@ -23,10 +23,6 @@ export const StartPage = () => {
 
   const [presence, updatePresence] = useMyPresence();
 
-  if (!presence.name) {
-    updatePresence({ name: fakePlayerName() });
-  }
-
   const others = useOthers();
 
   const currentUser = useSelf();

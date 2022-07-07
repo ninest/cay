@@ -18,13 +18,16 @@ type Config = {
   started: boolean;
   leader: number;
   reader: number;
+  currentBlackCard: number | null;
 };
-type Card = {};
+export type WhiteCard = { text: string; pack: number };
+export type BlackCard = WhiteCard & { pick: number };
 
 type Storage = {
   config: LiveObject<Config>;
-  whiteCards: LiveList<Card>;
-  blackCards: LiveList<Card>;
+  hands: LiveMap<string, WhiteCard[]>;
+  whiteCards: LiveList<WhiteCard>;
+  blackCards: LiveList<BlackCard>;
 };
 
 export const {

@@ -1,17 +1,17 @@
-import {
-  RoomProvider
-} from "@/liveblocks";
+import { RoomProvider } from "@/liveblocks";
 import { GamePage } from "@/routes/game";
 import { StartPage } from "@/routes/start";
-import { LiveList, LiveObject } from "@liveblocks/client";
+import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
 import {
   Outlet,
   Route,
   Routes,
   useNavigate,
-  useParams
+  useParams,
 } from "react-router-dom";
+import { blackCardsCAH, whiteCardsCAH } from "./cards";
 import { IndexPage } from "./routes";
+import { fakePlayerName } from "./utils/names";
 
 export const App = () => {
   return (
@@ -36,14 +36,19 @@ const Game = () => {
   return (
     <RoomProvider
       id={roomId!}
+      initialPresence={{
+        name: fakePlayerName(),
+      }}
       initialStorage={{
         config: new LiveObject({
           started: false,
           leader: 0,
           reader: 0,
+          currentBlackCard: null,
         }),
-        whiteCards: new LiveList([]),
-        blackCards: new LiveList([]),
+        whiteCards: new LiveList(whiteCardsCAH),
+        blackCards: new LiveList(blackCardsCAH),
+        hands: new LiveMap([]),
       }}
     >
       <Outlet />
