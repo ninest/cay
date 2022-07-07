@@ -16,6 +16,7 @@ export const PlayersList = ({ leaderId, players }: PlayersListProps) => {
     <ul className="space-y-xs">
       {players.map((player) => (
         <PlayerListItem
+          key={player.connectionId}
           player={player}
           isLeader={player.connectionId == leaderId}
         />

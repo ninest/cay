@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import { FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export const StarPage = () => {
+export const StartPage = () => {
   const navigate = useNavigate();
   const room = useRoom();
 
@@ -32,8 +32,6 @@ export const StarPage = () => {
   const currentUser = useSelf();
 
   const config = useList("config");
-  const whiteCards = useList("whiteCards");
-  const blackCards = useList("blackCards");
 
   // If this user is the first one, set them to the leader and first black card reader
   useEffect(() => {
@@ -48,7 +46,7 @@ export const StarPage = () => {
 
   useEffect(() => {
     if (config?.get("started")) navigate(`/${room.id}/game`);
-  }, [config]);
+  }, [config, config?.get("started")]);
 
   if (config == null) {
     return <div>Loading ...</div>;
@@ -58,7 +56,11 @@ export const StarPage = () => {
   const isLeader = currentUser?.connectionId == leaderId;
 
   const startGame = () => {
-    config.set("started", true);
+    if (others.count > 0) {
+      config.set("started", true);
+    } else {
+      alert("Need more friends");
+    }
   };
 
   return (
