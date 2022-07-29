@@ -36,42 +36,53 @@ export const GamePage = () => {
   const leaderId = config?.get("leader");
   const isLeader = currentUser?.connectionId == leaderId;
 
-  const connectionIds = [
-    currentUser?.connectionId!,
-    ...others.map((other) => other.connectionId!),
-  ];
+  const otherConnectionsIds = others.map((other) => other.connectionId!);
+  const allConnectionIds = [currentUser?.connectionId!, ...otherConnectionsIds];
 
   // Set the next black card reader
   const nextReader = () => {
-    config?.set("reader", sample(connectionIds));
+    config?.set("reader", sample(otherConnectionsIds));
   };
 
   const round = () => {
-    // Distribute cards
-    for (let i = 0; i < 3; i++) {
-      connectionIds.forEach((connectionId) => {
-        if (connectionId != leaderId) {
-          try {
-            hands?.set(connectionId.toString(), [
-              ...hands?.get(connectionId.toString())!,
-              whiteCards?.get(0)!,
-            ]);
-          } catch (e) {
-            hands?.set(connectionId.toString(), [whiteCards?.get(0)!]);
-          }
-          whiteCards?.delete(0);
-        }
-      });
-    }
+    distributeWhiteCards();
 
     // Set black card
     config?.set("currentBlackCard", randomIndex(blackCards?.toArray() ?? []));
 
     // Allow users to submit
-    setSubmitted(false);
+    // setSubmitted(false);
 
     // Reset selected
     setSelectedWhiteCards([]);
+  };
+
+  // Ensure that all players (except for the leader have three white cards)
+  // This should happen at the end of the black reader's round, so they should not be getting white cards
+  // All players (including the black card reader) should get white cards
+  const distributeWhiteCards = () => {
+    console.log("Distributing white cards");
+
+    for (const playerId of allConnectionIds) {
+      while (true) {
+        const key = playerId.toString();
+        const playersHand = hands?.get(key) ?? [];
+        console.log(`${key}: ${playersHand}`);
+
+        if (playersHand.length >= 3) {
+          break;
+        } else {
+          const newWhiteCard = whiteCards?.get(0);
+          whiteCards?.delete(0);
+          hands?.set(key, [newWhiteCard!, ...playersHand]);
+        }
+      }
+    }
+  };
+
+  // Reset all submitted white cards
+  const resetTable = () => {
+    submittedWhiteCards?.clear();
   };
 
   const reader = config?.get("reader");
@@ -84,6 +95,11 @@ export const GamePage = () => {
   const isReader = reader == currentUser?.connectionId;
 
   const myHand = hands?.get(currentUser?.connectionId.toString()!);
+  // Have I submitted the white cards?
+  const haveSubmitted = submittedWhiteCards?.some(
+    (submittedWhiteCardSet) =>
+      submittedWhiteCardSet.playerId === currentUser?.connectionId
+  );
 
   const blackCard = blackCards?.get(config?.get("currentBlackCard") ?? 0);
   const maxSelection = blackCard?.pick!;
@@ -97,7 +113,8 @@ export const GamePage = () => {
 
   const [selectedWhiteCards, setSelectedWhiteCards] = useState<WhiteCard[]>([]);
   const selectWhiteCard = (whiteCard: WhiteCard) => {
-    if (submitted) return;
+    if (haveSubmitted) return;
+    // if (submitted) return;
 
     console.log(whiteCard);
     if (selectedWhiteCardsContains(whiteCard)) {
@@ -113,7 +130,6 @@ export const GamePage = () => {
   };
   const tooManySelected = selectedWhiteCards.length > maxSelection;
 
-  const [submitted, setSubmitted] = useState(false);
   const submitWhiteCards = () => {
     if (tooManySelected) return;
 
@@ -132,7 +148,7 @@ export const GamePage = () => {
     });
 
     setSelectedWhiteCards([]);
-    setSubmitted(true);
+    // setSubmitted(true);
   };
 
   // For reader
@@ -143,6 +159,16 @@ export const GamePage = () => {
     const key = playerId.toString();
     const currentPlayerScore = scores?.get(key) ?? 0;
     scores?.set(key, currentPlayerScore + 1);
+
+    reset();
+  };
+
+  const reset = () => {
+    resetTable();
+    round();
+
+    // The next reader is chosen the last because the new white cards must be distributed by the current black card reader
+    nextReader();
   };
 
   if (

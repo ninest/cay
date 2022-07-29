@@ -26,6 +26,7 @@ export type BlackCard = WhiteCard & { pick: number };
 
 type Storage = {
   config: LiveObject<Config>;
+  // Mapping of playerId to list of white cards in player's hand
   hands: LiveMap<string, WhiteCard[]>;
   whiteCards: LiveList<WhiteCard>;
   blackCards: LiveList<BlackCard>;
