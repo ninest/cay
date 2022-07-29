@@ -13,7 +13,7 @@ import {
   useOthers,
   useRoom,
   useSelf,
-  WhiteCard
+  WhiteCard,
 } from "@/liveblocks";
 import { randomIndex, sample } from "@/utils/random";
 import clsx from "clsx";
@@ -31,6 +31,7 @@ export const GamePage = () => {
   const blackCards = useList("blackCards");
   const hands = useMap("hands");
   const submittedWhiteCards = useList("submittedWhiteCards");
+  const scores = useMap("scores");
 
   const leaderId = config?.get("leader");
   const isLeader = currentUser?.connectionId == leaderId;
@@ -137,13 +138,21 @@ export const GamePage = () => {
   // For reader
   const allSubmitted = submittedWhiteCards?.length === others.count;
 
+  const selectWhiteCardSet = (playerId: number) => {
+    // Add 1 to this player's score and reset the black card on table
+    const key = playerId.toString();
+    const currentPlayerScore = scores?.get(key) ?? 0;
+    scores?.set(key, currentPlayerScore + 1);
+  };
+
   if (
     config == null ||
     whiteCards == null ||
     blackCards == null ||
     hands == null ||
     currentUser == null ||
-    submittedWhiteCards == null
+    submittedWhiteCards == null ||
+    scores == null
   ) {
     return <div>Loading ...</div>;
   }
@@ -211,15 +220,20 @@ export const GamePage = () => {
               <>
                 <p className="font-bold text-lg">Choose the best response:</p>
                 <Spacer />
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-base">
-                  {submittedWhiteCards.map((submittedWhiteCards, index) => (
-                    <div key={index}>
-                      {submittedWhiteCards.whiteCards.map(
+                <div className="grid grid-cols-1 gap-base">
+                  {submittedWhiteCards.map((submittedWhiteCardSets, index) => (
+                    <div key={index} className="flex items-center space-x-sm">
+                      {submittedWhiteCardSets.whiteCards.map(
                         (whiteCard, index) => (
                           <White
                             key={index}
                             whiteCard={whiteCard}
-                            onClick={() => {}}
+                            className="w-1/2"
+                            onClick={() =>
+                              selectWhiteCardSet(
+                                submittedWhiteCardSets.playerId
+                              )
+                            }
                           />
                         )
                       )}
@@ -266,9 +280,12 @@ export const GamePage = () => {
           )
             icons.push(FaCheck);
 
+          const score = scores?.get(other.connectionId.toString());
+
           return {
             connectionId: other.connectionId,
             presence: other.presence!,
+            score,
             icons,
           } as Player;
         })}

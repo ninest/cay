@@ -50,6 +50,7 @@ const Game = () => {
         blackCards: new LiveList(blackCardsCAH),
         hands: new LiveMap([]),
         submittedWhiteCards: new LiveList([]),
+        scores: new LiveMap([]),
       }}
     >
       <Outlet />

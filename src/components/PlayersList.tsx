@@ -9,6 +9,7 @@ export interface Player {
   presence: Presence;
   // Optional icon to keep at the right of the player
   icons?: IconType[];
+  score?: number;
 }
 interface PlayersListProps extends HTMLAttributes<HTMLDivElement> {
   leaderId: number;
@@ -21,6 +22,7 @@ export const PlayersList = ({ leaderId, players }: PlayersListProps) => {
         <PlayerListItem
           key={player.connectionId}
           player={player}
+          score={player.score}
           isLeader={player.connectionId == leaderId}
           icons={player.icons}
         />
@@ -32,9 +34,15 @@ export const PlayersList = ({ leaderId, players }: PlayersListProps) => {
 interface PlayerListItemsProps {
   player: Player;
   isLeader: boolean;
+  score?: number;
   icons?: IconType[];
 }
-const PlayerListItem = ({ player, isLeader, icons }: PlayerListItemsProps) => {
+const PlayerListItem = ({
+  player,
+  isLeader,
+  score,
+  icons,
+}: PlayerListItemsProps) => {
   return (
     <li key={player.connectionId} className="flex items-center justify-between">
       <div className="flex items-center space-x-xs">
@@ -47,13 +55,16 @@ const PlayerListItem = ({ player, isLeader, icons }: PlayerListItemsProps) => {
         </span>
       </div>
 
-      {(icons || isLeader) && (
-        <div className="ml-sm flex items-center space-x-xs">
-          {isLeader && <Icon icon={FaCrown} className="text-yellow-500" />}
-          {icons &&
-            icons.map((icon, index) => <Icon key={index} icon={icon} />)}
-        </div>
-      )}
+      <div className="flex items-center space-x-sm">
+        {score && <div className="font-mono">{score}</div>}
+        {(icons || isLeader) && (
+          <div className="ml-sm flex items-center space-x-xs">
+            {isLeader && <Icon icon={FaCrown} className="text-yellow-500" />}
+            {icons &&
+              icons.map((icon, index) => <Icon key={index} icon={icon} />)}
+          </div>
+        )}
+      </div>
     </li>
   );
 };

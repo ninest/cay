@@ -30,6 +30,8 @@ type Storage = {
   whiteCards: LiveList<WhiteCard>;
   blackCards: LiveList<BlackCard>;
   submittedWhiteCards: LiveList<SubmittedWhiteCards>;
+  // Mapping of playerId to score
+  scores: LiveMap<string, number>;
 };
 
 export const {
