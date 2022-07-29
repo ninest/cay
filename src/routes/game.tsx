@@ -50,9 +50,6 @@ export const GamePage = () => {
     // Set black card
     config?.set("currentBlackCard", randomIndex(blackCards?.toArray() ?? []));
 
-    // Allow users to submit
-    // setSubmitted(false);
-
     // Reset selected
     setSelectedWhiteCards([]);
   };
@@ -154,12 +151,22 @@ export const GamePage = () => {
   // For reader
   const allSubmitted = submittedWhiteCards?.length === others.count;
 
+  const [roundWinnerName, setRoundWinnerName] = useState<string | null>("");
+
   const selectWhiteCardSet = (playerId: number) => {
     // Add 1 to this player's score and reset the black card on table
     const key = playerId.toString();
     const currentPlayerScore = scores?.get(key) ?? 0;
     scores?.set(key, currentPlayerScore + 1);
 
+    setRoundWinnerName(
+      others.toArray().find((other) => other.connectionId === playerId)
+        ?.presence?.name!
+    );
+  };
+
+  const readerFinishRound = () => {
+    setRoundWinnerName(null); // reset winner name so bottom bar goes away
     reset();
   };
 
@@ -317,32 +324,50 @@ export const GamePage = () => {
         })}
       />
 
-      {selectedWhiteCards.length > 0 && (
-        <div className="fixed  bottom-0 left-0 right-0">
+      {/* 
+        selectedWhiteCards.length > 0 : white card selector has selected some cards
+        roundWinnerName : black card selector has selected a winner
+      */}
+      {(selectedWhiteCards.length > 0 || roundWinnerName) && (
+        <div className="fixed bottom-0 left-0 right-0">
           <div className="bg-white p-base border-t flex items-center justify-between">
-            <div>
-              <span
-                className={clsx("font-semibold", {
-                  "text-error": tooManySelected,
-                })}
-              >
-                <span className="font-mono">{selectedWhiteCards.length}</span>{" "}
-                cards selected
-              </span>
-              {tooManySelected && (
-                <span className="text-gray-light">
-                  {" "}
-                  (max <span className="font-mono">{maxSelection}</span>)
-                </span>
-              )}
-            </div>
-            <Button
-              variant="primary"
-              disabled={tooManySelected}
-              onClick={submitWhiteCards}
-            >
-              Submit
-            </Button>
+            {selectedWhiteCards.length > 0 && (
+              <>
+                <div>
+                  <span
+                    className={clsx("font-semibold", {
+                      "text-error": tooManySelected,
+                    })}
+                  >
+                    <span className="font-mono">
+                      {selectedWhiteCards.length}
+                    </span>{" "}
+                    cards selected
+                  </span>
+                  {tooManySelected && (
+                    <span className="text-gray-light">
+                      {" "}
+                      (max <span className="font-mono">{maxSelection}</span>)
+                    </span>
+                  )}
+                </div>
+                <Button
+                  variant="primary"
+                  disabled={tooManySelected}
+                  onClick={submitWhiteCards}
+                >
+                  Submit
+                </Button>
+              </>
+            )}
+            {roundWinnerName && (
+              <>
+                <div>{roundWinnerName} won the round!</div>
+                <Button variant="primary" onClick={readerFinishRound}>
+                  Next round
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
