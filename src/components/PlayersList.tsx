@@ -1,11 +1,14 @@
 import { Presence } from "@/liveblocks";
 import { HTMLAttributes } from "react";
+import { IconType } from "react-icons";
 import { FaChevronRight, FaCrown } from "react-icons/fa";
 import { Icon } from "./Icon";
 
-interface Player {
+export interface Player {
   connectionId: number;
   presence: Presence;
+  // Optional icon to keep at the right of the player
+  icons?: IconType[];
 }
 interface PlayersListProps extends HTMLAttributes<HTMLDivElement> {
   leaderId: number;
@@ -14,24 +17,24 @@ interface PlayersListProps extends HTMLAttributes<HTMLDivElement> {
 export const PlayersList = ({ leaderId, players }: PlayersListProps) => {
   return (
     <ul className="space-y-xs">
-      {players.map((player) => (
+      {players.map((player, index) => (
         <PlayerListItem
           key={player.connectionId}
           player={player}
           isLeader={player.connectionId == leaderId}
+          icons={player.icons}
         />
       ))}
     </ul>
   );
 };
 
-const PlayerListItem = ({
-  player,
-  isLeader,
-}: {
+interface PlayerListItemsProps {
   player: Player;
   isLeader: boolean;
-}) => {
+  icons?: IconType[];
+}
+const PlayerListItem = ({ player, isLeader, icons }: PlayerListItemsProps) => {
   return (
     <li key={player.connectionId} className="flex items-center justify-between">
       <div className="flex items-center space-x-xs">
@@ -44,9 +47,11 @@ const PlayerListItem = ({
         </span>
       </div>
 
-      {isLeader && (
-        <div className="ml-sm">
-          <Icon icon={FaCrown} className="text-yellow-500" />
+      {(icons || isLeader) && (
+        <div className="ml-sm flex items-center space-x-xs">
+          {isLeader && <Icon icon={FaCrown} className="text-yellow-500" />}
+          {icons &&
+            icons.map((icon, index) => <Icon key={index} icon={icon} />)}
         </div>
       )}
     </li>

@@ -1,23 +1,25 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/Button";
-import { PageLayout } from "@/components/layouts/PageLayout";
+import { Black, White } from "@/components/cards";
 import { Debug } from "@/components/Debug";
+import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
+import { PageLayout } from "@/components/layouts/PageLayout";
+import { Player, PlayersList } from "@/components/PlayersList";
+import { Spacer } from "@/components/Spacer";
 import {
   useList,
   useMap,
   useOthers,
   useRoom,
   useSelf,
-  WhiteCard,
+  WhiteCard
 } from "@/liveblocks";
 import { randomIndex, sample } from "@/utils/random";
-import { blackCardsCAH, whiteCardsCAH } from "@/cards";
-import { useState } from "react";
-import { Black, White } from "@/components/cards";
 import clsx from "clsx";
-import { Spacer } from "@/components/Spacer";
-import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
+import { useEffect, useState } from "react";
+import { IconType } from "react-icons";
+import { FaCheck } from "react-icons/fa";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -84,6 +86,13 @@ export const GamePage = () => {
 
   const blackCard = blackCards?.get(config?.get("currentBlackCard") ?? 0);
   const maxSelection = blackCard?.pick!;
+
+  useEffect(() => {
+    // Stop the game if there are no players
+    if (others.toArray().length === 0) {
+      alert("There are no players in this game!");
+    }
+  }, [others]);
 
   const [selectedWhiteCards, setSelectedWhiteCards] = useState<WhiteCard[]>([]);
   const selectWhiteCard = (whiteCard: WhiteCard) => {
@@ -244,6 +253,26 @@ export const GamePage = () => {
           </>
         )}
       </div>
+
+      <PlayersList
+        leaderId={leaderId!}
+        players={others.map((other) => {
+          const icons: IconType[] = [];
+          // Insert check mark if user has submitted white card
+          if (
+            submittedWhiteCards
+              .toArray()
+              .some((s) => s.playerId === other.connectionId)
+          )
+            icons.push(FaCheck);
+
+          return {
+            connectionId: other.connectionId,
+            presence: other.presence!,
+            icons,
+          } as Player;
+        })}
+      />
 
       {selectedWhiteCards.length > 0 && (
         <div className="fixed  bottom-0 left-0 right-0">
