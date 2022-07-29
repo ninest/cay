@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button";
 import { Debug } from "@/components/Debug";
+import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
 import { FormLabel } from "@/components/form/FormLabel";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { PlayersList } from "@/components/PlayersList";
@@ -128,9 +129,7 @@ export const StartPage = () => {
               }))}
             />
           ) : (
-            <div className="border-2 border-dashed flex items-center justify-center py-3xl rounded-md font-medium text-gray-light">
-              You have no friends.
-            </div>
+            <EmptyPlaceholder>You have no friends.</EmptyPlaceholder>
           )}
         </div>
 

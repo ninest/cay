@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Black, White } from "@/components/cards";
 import clsx from "clsx";
 import { Spacer } from "@/components/Spacer";
+import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -170,6 +171,7 @@ export const GamePage = () => {
         {isReader ? (
           <div>
             You are the <span className="font-black">black card</span> reader.
+            Click "round" to start the round.
           </div>
         ) : (
           <div>
@@ -180,9 +182,9 @@ export const GamePage = () => {
 
         {config.get("currentBlackCard") == null ? (
           <>
-            <div>
-              <i>The black card hasn't been chosen yet ...</i>
-            </div>
+            <EmptyPlaceholder>
+              The black card hasn't been chosen yet
+            </EmptyPlaceholder>
           </>
         ) : (
           <>
@@ -219,7 +221,9 @@ export const GamePage = () => {
             ) : (
               <>
                 {config.get("currentBlackCard") != null && (
-                  <p>Waiting for your slow friends ...</p>
+                  <EmptyPlaceholder>
+                    Waiting for your slow friends to submit white cards
+                  </EmptyPlaceholder>
                 )}
               </>
             )}
