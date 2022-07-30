@@ -84,13 +84,10 @@ export const GamePage = () => {
   // This should happen at the end of the black reader's round, so they should not be getting white cards
   // All players (including the black card reader) should get white cards
   const distributeWhiteCards = () => {
-    console.log("Distributing white cards");
-
     for (const playerId of allConnectionIds) {
       while (true) {
         const key = playerId.toString();
         const playersHand = hands?.get(key) ?? [];
-        console.log(`${key}: ${playersHand}`);
 
         if (playersHand.length >= 3) {
           break;
@@ -353,6 +350,8 @@ export const GamePage = () => {
           } as Player;
         })}
       />
+
+      <Spacer size="3xl" />
 
       {/* 
         selectedWhiteCards.length > 0 : white card selector has selected some cards

@@ -7,7 +7,7 @@ export const PageLayout = ({ children, ...props }: PageLayoutProps) => {
   return (
     <main
       {...props}
-      className={clsx(`h-screen p-md md:p-xl lg:p-2xl`, props.className)}
+      className={clsx(`h-full p-md md:p-xl lg:p-2xl`, props.className)}
     >
       {children}
     </main>
