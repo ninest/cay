@@ -178,13 +178,12 @@ export const GamePage = () => {
       others.toArray().find((other) => other.connectionId === playerId)
         ?.presence?.name!
     );
-
-    // Reset the selected white cards
-    setSelectedWhiteCardSet(null);
   };
 
   const readerFinishRound = () => {
-    setRoundWinnerName(null); // reset winner name so bottom bar goes away
+    // reset selected white cards and winner name so bottom bar goes away
+    setSelectedWhiteCardSet(null);
+    setRoundWinnerName(null);
     reset();
   };
 
@@ -394,7 +393,8 @@ export const GamePage = () => {
                 </Button>
               </>
             )}
-            {selectedWhiteCardSet && (
+            {/* Only show this if a white card set has been selected, and if there is no round winner */}
+            {selectedWhiteCardSet && !roundWinnerName && (
               <>
                 <div>Confirm?</div>
                 <Button variant="primary" onClick={confirmWhiteCardSet}>
@@ -405,7 +405,11 @@ export const GamePage = () => {
             {roundWinnerName && (
               <>
                 <div>{roundWinnerName} won the round!</div>
-                <Button variant="primary" onClick={readerFinishRound}>
+                <Button
+                  variant="primary"
+                  onClick={readerFinishRound}
+                  className="flex-none"
+                >
                   Next round
                 </Button>
               </>
