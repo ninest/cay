@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import { Black, White } from "@/components/cards";
 import { Debug } from "@/components/Debug";
 import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
+import { Header } from "@/components/Header";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { Player, PlayersList } from "@/components/PlayersList";
 import { Spacer } from "@/components/Spacer";
@@ -18,7 +19,7 @@ import { randomIndex, sample } from "@/utils/random";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { IconType } from "react-icons";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaSquare } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const GamePage = () => {
@@ -204,9 +205,150 @@ export const GamePage = () => {
     return <div>Loading ...</div>;
   }
 
+  const headerIcons: IconType[] = [];
+  if (isReader) headerIcons.push(FaSquare);
   return (
-    <PageLayout className="flex flex-col space-y-base lg:space-y-0 lg:flex-row lg:space-x-lg">
-      <div className="md:w-2/3 lg:w-1/4 space-y-base">
+    <>
+      <Header
+        text={currentUser.presence?.name!}
+        score={scores.get(currentUser.connectionId.toString()) ?? 0}
+        isLeader={isLeader}
+        icons={headerIcons}
+      />
+      <PageLayout className="flex flex-col space-y-base lg:space-y-0 lg:flex-row lg:space-x-lg">
+        <div className="md:w-2/3 lg:w-1/4 space-y-base">
+          {!firstRoundStarted && isReader && (
+            <div>
+              <Button onClick={round} variant="primary" className="w-full">
+                Start game
+              </Button>
+            </div>
+          )}
+
+          {isReader ? (
+            <div>
+              <span className="text-primary font-medium">You</span> are the{" "}
+              <span className="font-black">black card</span> reader.
+              {!firstRoundStarted && (
+                <span> Click "start" to start the round.</span>
+              )}
+            </div>
+          ) : (
+            <div>
+              <i>{readerInfo?.presence?.name}</i> is the{" "}
+              <span className="font-black">black card</span> reader.
+            </div>
+          )}
+
+          {config.get("currentBlackCard") == null ? (
+            <>
+              <EmptyPlaceholder>
+                The black card hasn't been chosen yet
+              </EmptyPlaceholder>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-base">
+                <Black {...blackCard!} className="" />
+
+                {/* For the reader, show the selected white card set they currently selected */}
+                {isReader && selectedWhiteCardSet && (
+                  <>
+                    {selectedWhiteCardSet.whiteCards.map((whiteCard, index) => (
+                      <White key={index} whiteCard={whiteCard} />
+                    ))}
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div>
+          {isReader ? (
+            <>
+              {/* All players have submitted white cards, so reader can see them */}
+              {allSubmitted ? (
+                <>
+                  <p className="font-bold text-lg">Choose the best response:</p>
+                  <Spacer />
+                  <div className="grid grid-cols-1 gap-base">
+                    {submittedWhiteCards.map(
+                      (submittedWhiteCardSets, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-sm"
+                        >
+                          {submittedWhiteCardSets.whiteCards.map(
+                            (whiteCard, index) => (
+                              <White
+                                key={index}
+                                whiteCard={whiteCard}
+                                className="w-1/2"
+                                onClick={() =>
+                                  selectWhiteCardSet(
+                                    submittedWhiteCardSets.playerId
+                                  )
+                                }
+                              />
+                            )
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {config.get("currentBlackCard") != null && (
+                    <EmptyPlaceholder>
+                      Waiting for your slow friends to submit white cards
+                    </EmptyPlaceholder>
+                  )}
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-base">
+                {myHand &&
+                  myHand.map((whiteCard, index) => (
+                    <White
+                      key={index}
+                      whiteCard={whiteCard}
+                      selected={selectedWhiteCardsContains(whiteCard)}
+                      onClick={() => selectWhiteCard(whiteCard)}
+                    />
+                  ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <PlayersList
+          leaderId={leaderId!}
+          players={others.map((other) => {
+            const icons: IconType[] = [];
+            // Insert check mark if user has submitted white card
+            if (
+              submittedWhiteCards
+                .toArray()
+                .some((s) => s.playerId === other.connectionId)
+            )
+              icons.push(FaCheck);
+
+            const score = scores?.get(other.connectionId.toString());
+
+            return {
+              connectionId: other.connectionId,
+              presence: other.presence!,
+              score,
+              icons,
+            } as Player;
+          })}
+        />
+
+        <Spacer size="3xl" />
         <Debug
           data={{
             submittedWhiteCards: submittedWhiteCards.toArray(),
@@ -224,140 +366,12 @@ export const GamePage = () => {
             blackCards: blackCards.toArray(),
           }}
         />
-
-        <div>
-          {!firstRoundStarted && isReader && (
-            <Button onClick={round} variant="primary" className="w-full">
-              Start game
-            </Button>
-          )}
-        </div>
-
-        {isReader ? (
-          <div>
-            <span className="text-primary font-medium">You</span> are the{" "}
-            <span className="font-black">black card</span> reader.
-            {!firstRoundStarted && (
-              <span> Click "start" to start the round.</span>
-            )}
-          </div>
-        ) : (
-          <div>
-            <i>{readerInfo?.presence?.name}</i> is the{" "}
-            <span className="font-black">black card</span> reader.
-          </div>
-        )}
-
-        {config.get("currentBlackCard") == null ? (
-          <>
-            <EmptyPlaceholder>
-              The black card hasn't been chosen yet
-            </EmptyPlaceholder>
-          </>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 gap-base">
-              <Black {...blackCard!} className="" />
-
-              {/* For the reader, show the selected white card set they currently selected */}
-              {isReader && selectedWhiteCardSet && (
-                <>
-                  {selectedWhiteCardSet.whiteCards.map((whiteCard, index) => (
-                    <White key={index} whiteCard={whiteCard} />
-                  ))}
-                </>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-
-      <div>
-        {isReader ? (
-          <>
-            {/* All players have submitted white cards, so reader can see them */}
-            {allSubmitted ? (
-              <>
-                <p className="font-bold text-lg">Choose the best response:</p>
-                <Spacer />
-                <div className="grid grid-cols-1 gap-base">
-                  {submittedWhiteCards.map((submittedWhiteCardSets, index) => (
-                    <div key={index} className="flex items-center space-x-sm">
-                      {submittedWhiteCardSets.whiteCards.map(
-                        (whiteCard, index) => (
-                          <White
-                            key={index}
-                            whiteCard={whiteCard}
-                            className="w-1/2"
-                            onClick={() =>
-                              selectWhiteCardSet(
-                                submittedWhiteCardSets.playerId
-                              )
-                            }
-                          />
-                        )
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <>
-                {config.get("currentBlackCard") != null && (
-                  <EmptyPlaceholder>
-                    Waiting for your slow friends to submit white cards
-                  </EmptyPlaceholder>
-                )}
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-base">
-              {myHand &&
-                myHand.map((whiteCard, index) => (
-                  <White
-                    key={index}
-                    whiteCard={whiteCard}
-                    selected={selectedWhiteCardsContains(whiteCard)}
-                    onClick={() => selectWhiteCard(whiteCard)}
-                  />
-                ))}
-            </div>
-          </>
-        )}
-      </div>
-
-      <PlayersList
-        leaderId={leaderId!}
-        players={others.map((other) => {
-          const icons: IconType[] = [];
-          // Insert check mark if user has submitted white card
-          if (
-            submittedWhiteCards
-              .toArray()
-              .some((s) => s.playerId === other.connectionId)
-          )
-            icons.push(FaCheck);
-
-          const score = scores?.get(other.connectionId.toString());
-
-          return {
-            connectionId: other.connectionId,
-            presence: other.presence!,
-            score,
-            icons,
-          } as Player;
-        })}
-      />
-
-      <Spacer size="3xl" />
-
+      </PageLayout>
       {/* 
-        selectedWhiteCards.length > 0 : white card selector has selected some cards
-        selectedWhiteCardSet : black card reader has selected a card set and needs to confirm
-        roundWinnerName : black card selector has selected a winner
-      */}
+          selectedWhiteCards.length > 0 : white card selector has selected some cards
+          selectedWhiteCardSet : black card reader has selected a card set and needs to confirm
+          roundWinnerName : black card selector has selected a winner
+        */}
       {(selectedWhiteCards.length > 0 ||
         selectedWhiteCardSet ||
         roundWinnerName) && (
@@ -416,6 +430,6 @@ export const GamePage = () => {
           </div>
         </div>
       )}
-    </PageLayout>
+    </>
   );
 };
