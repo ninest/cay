@@ -42,6 +42,7 @@ const Game = () => {
       initialStorage={{
         config: new LiveObject({
           started: false,
+          gameStarted: false,
           leader: 0,
           reader: 0,
           currentBlackCard: null,

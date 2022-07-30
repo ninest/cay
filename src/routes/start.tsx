@@ -144,9 +144,9 @@ export const StartPage = () => {
               </Button>
             </>
           ) : (
-            <>
+            <p className="text-center text-gray-light font-medium">
               <i>Waiting for the host to start the game ...</i>
-            </>
+            </p>
           )}
         </div>
       </div>

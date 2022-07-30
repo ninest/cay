@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 import { Button } from "@/components/Button";
 import { Black, White } from "@/components/cards";
 import { Debug } from "@/components/Debug";
@@ -20,6 +18,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { IconType } from "react-icons";
 import { FaCheck } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -39,6 +38,29 @@ export const GamePage = () => {
   const otherConnectionsIds = others.map((other) => other.connectionId!);
   const allConnectionIds = [currentUser?.connectionId!, ...otherConnectionsIds];
 
+  const firstRoundStarted = config?.get("gameStarted");
+
+  // Stop the game if there are no players
+  useEffect(() => {
+    if (others.toArray().length === 0) {
+      alert("There are no players in this game!");
+    }
+  }, [others]);
+
+  // Reader: the black card reader
+  const reader = config?.get("reader");
+  let readerInfo;
+  if (reader == currentUser?.connectionId) {
+    readerInfo = currentUser;
+  } else {
+    readerInfo = others.toArray().find((other) => other.connectionId == reader);
+  }
+  const isReader = reader == currentUser?.connectionId;
+
+  // Current black card
+  const blackCard = blackCards?.get(config?.get("currentBlackCard") ?? 0);
+  const maxSelection = blackCard?.pick!; // the number of white cards to select
+
   // Set the next black card reader
   const nextReader = () => {
     config?.set("reader", sample(otherConnectionsIds));
@@ -52,6 +74,9 @@ export const GamePage = () => {
 
     // Reset selected
     setSelectedWhiteCards([]);
+
+    // Set the gameStarted to true (this actually only needs to be done for the first round)
+    config?.set("gameStarted", true);
   };
 
   // Ensure that all players (except for the leader have three white cards)
@@ -82,15 +107,6 @@ export const GamePage = () => {
     submittedWhiteCards?.clear();
   };
 
-  const reader = config?.get("reader");
-  let readerInfo;
-  if (reader == currentUser?.connectionId) {
-    readerInfo = currentUser;
-  } else {
-    readerInfo = others.toArray().find((other) => other.connectionId == reader);
-  }
-  const isReader = reader == currentUser?.connectionId;
-
   const myHand = hands?.get(currentUser?.connectionId.toString()!);
   // Have I submitted the white cards?
   const haveSubmitted = submittedWhiteCards?.some(
@@ -98,22 +114,10 @@ export const GamePage = () => {
       submittedWhiteCardSet.playerId === currentUser?.connectionId
   );
 
-  const blackCard = blackCards?.get(config?.get("currentBlackCard") ?? 0);
-  const maxSelection = blackCard?.pick!;
-
-  useEffect(() => {
-    // Stop the game if there are no players
-    if (others.toArray().length === 0) {
-      alert("There are no players in this game!");
-    }
-  }, [others]);
-
   const [selectedWhiteCards, setSelectedWhiteCards] = useState<WhiteCard[]>([]);
   const selectWhiteCard = (whiteCard: WhiteCard) => {
     if (haveSubmitted) return;
-    // if (submitted) return;
 
-    console.log(whiteCard);
     if (selectedWhiteCardsContains(whiteCard)) {
       setSelectedWhiteCards(
         selectedWhiteCards.filter((card) => card.text !== whiteCard.text)
@@ -212,9 +216,9 @@ export const GamePage = () => {
         />
 
         <div>
-          {isReader && (
-            <Button onClick={round} className="w-full">
-              Round
+          {!firstRoundStarted && isReader && (
+            <Button onClick={round} variant="primary" className="w-full">
+              Start game
             </Button>
           )}
         </div>
@@ -222,7 +226,9 @@ export const GamePage = () => {
         {isReader ? (
           <div>
             You are the <span className="font-black">black card</span> reader.
-            Click "round" to start the round.
+            {!firstRoundStarted && (
+              <span> Click "start" to start the round.</span>
+            )}
           </div>
         ) : (
           <div>

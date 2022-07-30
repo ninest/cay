@@ -15,7 +15,8 @@ export type Presence = {
 };
 
 type Config = {
-  started: boolean;
+  started: boolean; // Have the players left the starting screen
+  gameStarted: boolean; //Has the first round started?
   leader: number;
   reader: number;
   currentBlackCard: number | null;
