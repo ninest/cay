@@ -6,6 +6,7 @@ import { PageLayout } from "@/components/layouts/PageLayout";
 import { Player, PlayersList } from "@/components/PlayersList";
 import { Spacer } from "@/components/Spacer";
 import {
+  SubmittedWhiteCards,
   useList,
   useMap,
   useOthers,
@@ -155,18 +156,31 @@ export const GamePage = () => {
   // For reader
   const allSubmitted = submittedWhiteCards?.length === others.count;
 
+  const [selectedWhiteCardSet, setSelectedWhiteCardSet] =
+    useState<SubmittedWhiteCards | null>(null);
   const [roundWinnerName, setRoundWinnerName] = useState<string | null>("");
 
   const selectWhiteCardSet = (playerId: number) => {
-    // Add 1 to this player's score and reset the black card on table
+    // const submittedWhiteCardSet = submittedWhiteCards?.get(playerId)!;
+    const submittedWhiteCardSet = submittedWhiteCards
+      ?.toArray()
+      .find((whiteCardSet) => whiteCardSet.playerId === playerId);
+    setSelectedWhiteCardSet(submittedWhiteCardSet!);
+  };
+
+  const confirmWhiteCardSet = () => {
+    const playerId = selectedWhiteCardSet?.playerId!;
+    //  Add 1 to this player's score and set the round winner name
     const key = playerId.toString();
     const currentPlayerScore = scores?.get(key) ?? 0;
     scores?.set(key, currentPlayerScore + 1);
-
     setRoundWinnerName(
       others.toArray().find((other) => other.connectionId === playerId)
         ?.presence?.name!
     );
+
+    // Reset the selected white cards
+    setSelectedWhiteCardSet(null);
   };
 
   const readerFinishRound = () => {
@@ -225,7 +239,8 @@ export const GamePage = () => {
 
         {isReader ? (
           <div>
-            You are the <span className="font-black">black card</span> reader.
+            <span className="text-primary font-medium">You</span> are the{" "}
+            <span className="font-black">black card</span> reader.
             {!firstRoundStarted && (
               <span> Click "start" to start the round.</span>
             )}
@@ -245,8 +260,17 @@ export const GamePage = () => {
           </>
         ) : (
           <>
-            <div>
-              <Black {...blackCard!} className="w-1/2 md:w-1/3 lg:w-full" />
+            <div className="grid grid-cols-2 gap-base">
+              <Black {...blackCard!} className="" />
+
+              {/* For the reader, show the selected white card set they currently selected */}
+              {isReader && selectedWhiteCardSet && (
+                <>
+                  {selectedWhiteCardSet.whiteCards.map((whiteCard, index) => (
+                    <White key={index} whiteCard={whiteCard} />
+                  ))}
+                </>
+              )}
             </div>
           </>
         )}
@@ -255,6 +279,7 @@ export const GamePage = () => {
       <div>
         {isReader ? (
           <>
+            {/* All players have submitted white cards, so reader can see them */}
             {allSubmitted ? (
               <>
                 <p className="font-bold text-lg">Choose the best response:</p>
@@ -332,9 +357,12 @@ export const GamePage = () => {
 
       {/* 
         selectedWhiteCards.length > 0 : white card selector has selected some cards
+        selectedWhiteCardSet : black card reader has selected a card set and needs to confirm
         roundWinnerName : black card selector has selected a winner
       */}
-      {(selectedWhiteCards.length > 0 || roundWinnerName) && (
+      {(selectedWhiteCards.length > 0 ||
+        selectedWhiteCardSet ||
+        roundWinnerName) && (
         <div className="fixed bottom-0 left-0 right-0">
           <div className="bg-white p-base border-t flex items-center justify-between">
             {selectedWhiteCards.length > 0 && (
@@ -363,6 +391,14 @@ export const GamePage = () => {
                   onClick={submitWhiteCards}
                 >
                   Submit
+                </Button>
+              </>
+            )}
+            {selectedWhiteCardSet && (
+              <>
+                <div>Confirm?</div>
+                <Button variant="primary" onClick={confirmWhiteCardSet}>
+                  Yes
                 </Button>
               </>
             )}

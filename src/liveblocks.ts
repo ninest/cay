@@ -22,7 +22,7 @@ type Config = {
   currentBlackCard: number | null;
 };
 export type WhiteCard = { text: string; pack: number };
-type SubmittedWhiteCards = { playerId: number; whiteCards: WhiteCard[] };
+export type SubmittedWhiteCards = { playerId: number; whiteCards: WhiteCard[] };
 export type BlackCard = WhiteCard & { pick: number };
 
 type Storage = {
