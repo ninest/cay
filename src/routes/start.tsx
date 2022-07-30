@@ -3,6 +3,7 @@ import { Debug } from "@/components/Debug";
 import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
 import { FormLabel } from "@/components/form/FormLabel";
 import { PageLayout } from "@/components/layouts/PageLayout";
+import { PackSelection } from "@/components/PackSelection";
 import { PlayersList } from "@/components/PlayersList";
 import { Spacer } from "@/components/Spacer";
 import {
@@ -12,9 +13,10 @@ import {
   useRoom,
   useSelf,
 } from "@/liveblocks";
+import { CardPack, WhiteCard } from "@/types";
 import { fakePlayerName } from "@/utils/names";
 import { shareLink } from "@/utils/share";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -25,10 +27,10 @@ export const StartPage = () => {
   const [presence, updatePresence] = useMyPresence();
 
   const others = useOthers();
-
   const currentUser = useSelf();
-
   const config = useList("config");
+  const whiteCards = useList("whiteCards");
+  const blackCards = useList("blackCards");
 
   // If this user is the first one, set them to the leader and first black card reader
   useEffect(() => {
@@ -45,6 +47,8 @@ export const StartPage = () => {
     if (config?.get("started")) navigate(`/${room.id}/game`);
   }, [config, config?.get("started")]);
 
+  const [selectedPacks, setSelectedPacks] = useState<CardPack[]>([]);
+
   if (config == null) {
     return <div>Loading ...</div>;
   }
@@ -53,8 +57,20 @@ export const StartPage = () => {
   const isLeader = currentUser?.connectionId == leaderId;
 
   const startGame = () => {
+    if (selectedPacks.length == 0) {
+      alert("Select a pack");
+      return
+    }
     if (others.count > 0) {
       config.set("started", true);
+      const selectedWhiteCards = selectedPacks.map((pack) => pack.white).flat();
+      const selectedBlackCards = selectedPacks.map((pack) => pack.black).flat();
+
+      whiteCards?.clear();
+      blackCards?.clear();
+
+      selectedWhiteCards.forEach((w) => whiteCards?.push(w));
+      selectedBlackCards.forEach((w) => blackCards?.push(w));
     } else {
       alert("Need more friends");
     }
@@ -115,9 +131,10 @@ export const StartPage = () => {
 
       <div>
         <Spacer />
-        <div className="font-semibold text-gray-darker">
-          Players <span className="font-mono">({others.count})</span>:
-        </div>
+
+        <FormLabel name="players">
+          Players (<span className="font-mono">{others.count}</span>):
+        </FormLabel>
         <Spacer size="xs" />
         {others.count > 0 ? (
           <PlayersList
@@ -131,6 +148,17 @@ export const StartPage = () => {
           <EmptyPlaceholder>You have no friends.</EmptyPlaceholder>
         )}
       </div>
+
+      <Spacer />
+
+      <fieldset>
+        <FormLabel name="packs">Select packs:</FormLabel>
+        <Spacer size="xs" />
+        <PackSelection
+          selectedPacks={selectedPacks}
+          setSelectedPacks={setSelectedPacks}
+        />
+      </fieldset>
 
       <Spacer />
 

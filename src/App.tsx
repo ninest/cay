@@ -7,9 +7,8 @@ import {
   Route,
   Routes,
   useNavigate,
-  useParams,
+  useParams
 } from "react-router-dom";
-import { blackCardsCAH, whiteCardsCAH } from "./cards";
 import { IndexPage } from "./routes";
 import { fakePlayerName } from "./utils/names";
 
@@ -47,8 +46,9 @@ const Game = () => {
           reader: 0,
           currentBlackCard: null,
         }),
-        whiteCards: new LiveList(whiteCardsCAH),
-        blackCards: new LiveList(blackCardsCAH),
+        // Pack selection is required, no packs included by default
+        whiteCards: new LiveList([]),
+        blackCards: new LiveList([]),
         hands: new LiveMap([]),
         submittedWhiteCards: new LiveList([]),
         scores: new LiveMap([]),

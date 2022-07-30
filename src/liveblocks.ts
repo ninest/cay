@@ -5,6 +5,7 @@ import {
   LiveObject,
 } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
+import { BlackCard, WhiteCard } from "./types";
 
 export const client = createClient({
   publicApiKey: import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY,
@@ -21,9 +22,8 @@ type Config = {
   reader: number;
   currentBlackCard: number | null;
 };
-export type WhiteCard = { text: string; pack: number };
+
 export type SubmittedWhiteCards = { playerId: number; whiteCards: WhiteCard[] };
-export type BlackCard = WhiteCard & { pick: number };
 
 type Storage = {
   config: LiveObject<Config>;

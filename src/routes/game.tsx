@@ -12,9 +12,9 @@ import {
   useMap,
   useOthers,
   useRoom,
-  useSelf,
-  WhiteCard,
+  useSelf
 } from "@/liveblocks";
+import { WhiteCard } from "@/types";
 import { randomIndex, sample } from "@/utils/random";
 import clsx from "clsx";
 import { useEffect, useState } from "react";

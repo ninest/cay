@@ -1,0 +1,137 @@
+{
+  "name": "World Wide Web Pack",
+  "white": [
+    {
+      "text": "A complete inability to understand anyone else's perspective.",
+      "pack": 0
+    },
+    {
+      "text": "A fun, sexy time at the nude beach.",
+      "pack": 0
+    },
+    {
+      "text": "A man from Craigslist.",
+      "pack": 0
+    },
+    {
+      "text": "A night of Taco Bell and anal sex.",
+      "pack": 0
+    },
+    {
+      "text": "A respectful discussion of race and gender on the Internet.",
+      "pack": 0
+    },
+    {
+      "text": "Cat massage.",
+      "pack": 0
+    },
+    {
+      "text": "Destroying Dick Cheney's last horcrux.",
+      "pack": 0
+    },
+    {
+      "text": "Game of Thrones spoilers.",
+      "pack": 0
+    },
+    {
+      "text": "Getting teabagged by a fifth grader in Call of Duty.",
+      "pack": 0
+    },
+    {
+      "text": "Goats screaming like people.",
+      "pack": 0
+    },
+    {
+      "text": "Googling.",
+      "pack": 0
+    },
+    {
+      "text": "Internet porn analysis paralysis.",
+      "pack": 0
+    },
+    {
+      "text": "Matching with Mom on Tinder.",
+      "pack": 0
+    },
+    {
+      "text": "My browser history.",
+      "pack": 0
+    },
+    {
+      "text": "My privileged white penis.",
+      "pack": 0
+    },
+    {
+      "text": "Pretending to be black.",
+      "pack": 0
+    },
+    {
+      "text": "Smash Mouth.",
+      "pack": 0
+    },
+    {
+      "text": "Taking a shit while running at full speed.",
+      "pack": 0
+    },
+    {
+      "text": "That thing on the Internet everyone's talking about.",
+      "pack": 0
+    },
+    {
+      "text": "Three years of semen in a shoebox.",
+      "pack": 0
+    },
+    {
+      "text": "Youtube comments.",
+      "pack": 0
+    }
+  ],
+  "black": [
+    {
+      "text": "Don't worry, Penny! Go Go Gadget _!",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "I need you like _ needs _.",
+      "pick": 2,
+      "pack": 0
+    },
+    {
+      "text": "I'm just gonna stay in tonight. You know, Netflix and _.",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "Nothing says \"I love you\" like _.",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "Such _. Very _. Wow.",
+      "pick": 2,
+      "pack": 0
+    },
+    {
+      "text": "This app is basically Tinder, but for _.",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "TRIGGER WARNING: _.",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "What did I nickname my genitals?",
+      "pick": 1,
+      "pack": 0
+    },
+    {
+      "text": "You guys, you can buy _ on the dark web.",
+      "pick": 1,
+      "pack": 0
+    }
+  ],
+  "official": true
+}

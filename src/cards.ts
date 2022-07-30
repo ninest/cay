@@ -1,6 +1,8 @@
-import cards from "./cards.json";
+import defaultPack from "../packs/default.json";
+import worldWideWeb from "../packs/www.json";
+import { CardPack } from "./types";
 
-export const whiteCardsCAH = cards.white.slice(0, 25);
-export const blackCardsCAH = cards.black
-  .filter((black) => black.pick == 2)
-  .slice(0, 25);
+export const packs: CardPack[] = [
+  { ...defaultPack, name: "Base" },
+  { ...worldWideWeb, name: "World-wide-web" },
+];
