@@ -128,10 +128,10 @@ export const GamePage = () => {
   const selectedWhiteCardsContains = (whiteCard: WhiteCard) => {
     return selectedWhiteCards.some((card) => card.text === whiteCard.text);
   };
-  const tooManySelected = selectedWhiteCards.length > maxSelection;
+  const notEnoughSelected = selectedWhiteCards.length !== maxSelection;
 
   const submitWhiteCards = () => {
-    if (tooManySelected) return;
+    if (notEnoughSelected) return;
 
     submittedWhiteCards?.push({
       playerId: currentUser?.connectionId!,
@@ -382,7 +382,7 @@ export const GamePage = () => {
                 <div>
                   <span
                     className={clsx("font-semibold", {
-                      "text-error": tooManySelected,
+                      "text-error": notEnoughSelected,
                     })}
                   >
                     <span className="font-mono">
@@ -390,16 +390,21 @@ export const GamePage = () => {
                     </span>{" "}
                     cards selected
                   </span>
-                  {tooManySelected && (
+                  {notEnoughSelected && (
+                    // Display "max N" if too many selected, or "min N" if too little selected
                     <span className="text-gray-light">
                       {" "}
-                      (max <span className="font-mono">{maxSelection}</span>)
+                      (
+                      {selectedWhiteCards.length < maxSelection
+                        ? "min"
+                        : "max"}{" "}
+                      <span className="font-mono">{maxSelection}</span>)
                     </span>
                   )}
                 </div>
                 <Button
                   variant="primary"
-                  disabled={tooManySelected}
+                  disabled={notEnoughSelected}
                   onClick={submitWhiteCards}
                 >
                   Submit
