@@ -1,4 +1,4 @@
-import { BlackCard, WhiteCard } from "@/liveblocks";
+import { BlackCard, WhiteCard } from "@/types";
 import clsx from "clsx";
 import { HTMLAttributes } from "react";
 
@@ -22,7 +22,9 @@ export const White = ({
         props.className
       )}
     >
-      <p className="text-gray-700 font-bold text-sm text-left">{whiteCard.text}</p>
+      <p className="text-gray-700 font-bold text-sm text-left">
+        {whiteCard.text}
+      </p>
     </button>
   );
 };
