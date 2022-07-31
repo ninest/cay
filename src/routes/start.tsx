@@ -62,19 +62,26 @@ export const StartPage = () => {
       alert("Select a pack");
       return;
     }
-    if (others.count > 0) {
-      config.set("started", true);
-      const selectedWhiteCards = selectedPacks.map((pack) => pack.white).flat();
-      const selectedBlackCards = selectedPacks.map((pack) => pack.black).flat();
-
-      whiteCards?.clear();
-      blackCards?.clear();
-
-      selectedWhiteCards.forEach((w) => whiteCards?.push(w));
-      selectedBlackCards.forEach((w) => blackCards?.push(w));
-    } else {
+    if (others.count == 0) {
       alert("Need more friends");
+      return;
     }
+
+    const selectedWhiteCards = selectedPacks.map((pack) => pack.white).flat();
+    const selectedBlackCards = selectedPacks.map((pack) => pack.black).flat();
+
+    whiteCards?.clear();
+    blackCards?.clear();
+
+    selectedWhiteCards.forEach((w) => {
+      whiteCards?.push(w);
+    });
+
+    selectedBlackCards.forEach((w) => {
+      blackCards?.push(w);
+    });
+
+    config.set("started", true);
   };
 
   return (
