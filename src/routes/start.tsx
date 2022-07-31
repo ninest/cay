@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import { Debug } from "@/components/Debug";
 import { EmptyPlaceholder } from "@/components/EmptyPlaceholder";
 import { FormLabel } from "@/components/form/FormLabel";
+import { Icon } from "@/components/Icon";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { PackSelection } from "@/components/PackSelection";
 import { PlayersList } from "@/components/PlayersList";
@@ -17,7 +18,7 @@ import { CardPack, WhiteCard } from "@/types";
 import { fakePlayerName } from "@/utils/names";
 import { shareLink } from "@/utils/share";
 import { useEffect, useState } from "react";
-import { FaShareAlt } from "react-icons/fa";
+import { FaCrown, FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const StartPage = () => {
@@ -59,7 +60,7 @@ export const StartPage = () => {
   const startGame = () => {
     if (selectedPacks.length == 0) {
       alert("Select a pack");
-      return
+      return;
     }
     if (others.count > 0) {
       config.set("started", true);
@@ -122,16 +123,32 @@ export const StartPage = () => {
         {isLeader && (
           <>
             <Spacer />
-            <p>You are the leader</p>
+            <div className="flex items-center space-x-1">
+              <div>You are the leader</div>
+              <Icon icon={FaCrown} className="text-yellow-500" />
+            </div>
           </>
         )}
       </fieldset>
 
       <Spacer />
 
-      <div>
-        <Spacer />
+      {isLeader && (
+        <>
+          <fieldset>
+            <FormLabel name="packs">Select packs:</FormLabel>
+            <Spacer size="xs" />
+            <PackSelection
+              selectedPacks={selectedPacks}
+              setSelectedPacks={setSelectedPacks}
+            />
+          </fieldset>
 
+          <Spacer />
+        </>
+      )}
+
+      <div>
         <FormLabel name="players">
           Players (<span className="font-mono">{others.count}</span>):
         </FormLabel>
@@ -148,17 +165,6 @@ export const StartPage = () => {
           <EmptyPlaceholder>You have no friends.</EmptyPlaceholder>
         )}
       </div>
-
-      <Spacer />
-
-      <fieldset>
-        <FormLabel name="packs">Select packs:</FormLabel>
-        <Spacer size="xs" />
-        <PackSelection
-          selectedPacks={selectedPacks}
-          setSelectedPacks={setSelectedPacks}
-        />
-      </fieldset>
 
       <Spacer />
 
