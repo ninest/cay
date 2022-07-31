@@ -12,10 +12,9 @@ import {
   useMyPresence,
   useOthers,
   useRoom,
-  useSelf,
+  useSelf
 } from "@/liveblocks";
-import { CardPack, WhiteCard } from "@/types";
-import { fakePlayerName } from "@/utils/names";
+import { CardPack } from "@/types";
 import { shareLink } from "@/utils/share";
 import { useEffect, useState } from "react";
 import { FaCrown, FaShareAlt } from "react-icons/fa";

@@ -1,8 +1,8 @@
+import { Icon } from "@/components/Icon";
+import { Size } from "@/types";
 import clsx from "clsx";
 import { HTMLAttributes, ReactNode } from "react";
 import { IconType } from "react-icons";
-import { Size } from "@/types";
-import { Icon } from "@/components/Icon";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
   iconLeft?: IconType;
