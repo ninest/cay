@@ -3,8 +3,6 @@ import { intervalToDuration, subDays } from "date-fns";
 
 // Ensure that room has not been used in the pas three days
 const handler = async (req, res) => {
-  console.log(process.env.LIVEBLOCKS_SECRET_KEY);
-
   // Authenticate
   const authResponse = await axios.get("https://liveblocks.io/api/authorize", {
     headers: { Authorization: `Bearer ${process.env.LIVEBLOCKS_SECRET_KEY}` },
@@ -22,7 +20,6 @@ const handler = async (req, res) => {
     );
     const { config } = roomResponse.data.data;
     const timeStarted = new Date(config.data.timeStarted);
-    console.log(timeStarted);
 
     // If this room was created, more than a day back, delete all storage and return success true
     const interval = intervalToDuration({
