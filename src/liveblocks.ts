@@ -16,6 +16,7 @@ export type Presence = {
 };
 
 type Config = {
+  timeStarted: string; // datetime the game was created
   started: boolean; // Have the players left the starting screen
   gameStarted: boolean; //Has the first round started?
   leader: number;
