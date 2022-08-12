@@ -7,7 +7,7 @@ import {
   Route,
   Routes,
   useNavigate,
-  useParams
+  useParams,
 } from "react-router-dom";
 import { IndexPage } from "./routes";
 import { fakePlayerName } from "./utils/names";
@@ -16,7 +16,6 @@ export const App = () => {
   return (
     <Routes>
       <Route path="/" element={<IndexPage />} />
-      {/*  */}
       <Route path="/:roomId" element={<Game />}>
         <Route path="/:roomId/start" element={<StartPage />} />
         <Route path="/:roomId/game" element={<GamePage />} />
@@ -40,6 +39,7 @@ const Game = () => {
       }}
       initialStorage={{
         config: new LiveObject({
+          timeStarted: new Date().toISOString(),
           started: false,
           gameStarted: false,
           leader: 0,
